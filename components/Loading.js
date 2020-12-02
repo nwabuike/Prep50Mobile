@@ -1,8 +1,5 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
-import React, { useEffect } from 'react'
-import {StyleSheet, StatusBar } from 'react-native';
+import React, {useEffect} from 'react'
+import {StyleSheet, StatusBar, View, Text } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import AnimatedLoader from "react-native-animated-loader";
 // import Core from "../Core";
@@ -47,16 +44,21 @@ export default class Loading extends React.Component {
     }
 
     loggedOut = () => {
-        this.props.navigation.navigate('listItem');        
+        this.props.navigation.navigate('Auth');        
     }
 
     loggedIn = () => {
-        this.props.navigation.navigate('Poll');      	
+        this.props.navigation.navigate('App');      	
     }
 
 	render() {
         const { loader} = this.state;
 		return(
+            <View style={styles.container}>
+            <Text style={styles.text}>PREP50</Text>
+            <Text style={styles.title}>Success for Sure...</Text>
+            {/* <ActivityIndicator size="large" color="#F93106" /> */}
+          
             <AnimatedLoader
                 visible={loader}
                 overlayColor="#FFFFFF"
@@ -64,15 +66,34 @@ export default class Loading extends React.Component {
                 speed={1}
                 source={require("../data.json")}
             />
+            </View>
         );
 	}
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    
+    container:{
+        padding:15,
+        backgroundColor: 'white',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems:'center',
+        fontWeight:'bold',
+        fontSize:30,
+       //  fontFamily: 'Gill Sans Extrabold, sans-serif',
+        flex:1
+    },
+    text:{
+     color: '#F93106',
+     fontSize: 55,
+     fontFamily: 'Gill Sans Extrabold, sans-serif',
+     // fontFamily: 'Comic Sans, Comic Sans MS, cursive',
+    },
+    title:{
+      color: '#F93106',
+      padding:5,
+      fontSize: 15,
+      fontFamily:'Lucida Handwriting'
     },
     lottie: {
         width: 100,

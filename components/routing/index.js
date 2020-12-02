@@ -12,7 +12,8 @@ import Dash from '../Dash';
 import Subscription from '../Subscription';
 import UserDash from '../UserDash';
 // import Loading from './components/Loading';
-import SplashScreen from '../Apploading';
+// import SplashScreen from '../Apploading';
+import AuthAppLoading from '../Loading';
 // import Navigator from './components/HomeStack';
 
 const AuthStack = createStackNavigator(
@@ -25,7 +26,7 @@ const AuthStack = createStackNavigator(
   },
   {
     headerMode: 'none',
-    initialRouteName: 'Home',
+    initialRouteName: 'Login',
   },
 );
 
@@ -43,7 +44,7 @@ const AppNavigator =
   createAppContainer(
     createSwitchNavigator(
       {
-        AppLoading: SplashScreen,
+        AppLoading: AuthAppLoading,
         Auth: AuthStack,
         App: AppStack,
       },
