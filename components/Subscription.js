@@ -13,7 +13,7 @@ const db = new Database();
 
 let { width, height } = Dimensions.get('window');
 
-RNPaystack.init({ publicKey: 'pk_live_47b1bdd7b15605dfedfd8f4d3ccaf3edbc1a53f5' });
+RNPaystack.init({ publicKey: 'pk_live_1b4292ae349dfb87abd7daedacd1477277aefbde' });
 
 const styles = StyleSheet.create({
 	header: {

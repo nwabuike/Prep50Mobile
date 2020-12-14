@@ -5,8 +5,7 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import org.pgsqlite.SQLitePluginPackage;
-import org.pgsqlite.SQLitePluginPackage;
+// import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.prep50.generated.BasePackageList;
@@ -38,13 +37,19 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
            // Add unimodules
+
            packages.add(new LottiePackage());
+          //  packages.add(new SQLitePluginPackage());
+           
            List<ReactPackage> unimodules = Arrays.<ReactPackage>asList(
+            //  new SQLitePluginPackage(),
             new ModuleRegistryAdapter(mModuleRegistryProvider)
           );
           packages.addAll(unimodules);
           return packages;
+          
         }
+       
 
         @Override
         protected String getJSMainModuleName() {

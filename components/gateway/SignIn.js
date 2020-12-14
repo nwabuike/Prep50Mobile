@@ -4,8 +4,8 @@ import React, { Component } from "react";
 import { View, StyleSheet, Text, Alert, ActivityIndicator, Dimensions, StatusBar } from "react-native";
 import { Body, Content, Container, Header, Left, Right, Title} from "native-base";
 import { Card, Button, Overlay  } from "react-native-elements";
-import { connect } from "react-redux";
-// import PasswordInputText from 'react-native-hide-show-password-input';
+// import { connect } from "react-redux";
+import PasswordInputText from 'react-native-hide-show-password-input';
 import axios from 'axios';
 import Database from '../../database';
 import Orientation from "react-native-orientation";
@@ -109,7 +109,7 @@ class SignIn extends Component {
 			this.submitErr('Login Error', 'Your Phone number are required!');
         } else {
 			console.log( this.state.phone.trim());
-            axios.post('https://a4c2a1224654.ngrok.io/api/login', { phone: this.state.phone })
+            axios.post('https://9c5c3dcf3ace.ngrok.io/api/login', { phone: this.state.phone })
             .then(res => {
 				console.log(res);
                 if(res.data.message == undefined){
@@ -137,18 +137,23 @@ class SignIn extends Component {
 					
 
 					//insert user
-				  db.addUser(uData).then((res) => {
+				  db.addUser(uData)
+				  .then((res) => {
 						if(res.rowsAffected == 1){
 							//insert Activities
 							let actLen = uActivities.length;
 							for(let j = 0; j < actLen; j++){
 								let tmpAct = uActivities[j];
-
+								
 								db.addUserActivities(tmpAct).then((res6) => {
 									if(res6.rowsAffected == 1){
 										console.log('inserted an activity');										
 									}
-								}).catch((err) => {
+								}).then(()=>{
+                                    console.log(uData,'user inserted');
+								})
+
+								.catch((err) => {
 									console.log(err);
 								});
 							}
@@ -158,10 +163,12 @@ class SignIn extends Component {
 							let topicDone = false;
 							let objDone = false;
 							let quesDone = false;
+							console.log('Reached here');
 							//insert userSubjects
 							for(let i = 0; i < 4; i++){
-								
+								console.log('uSubjReg');
 								let tmpSbjreg = uSubjReg[i];
+
 
 								db.addUserSubj(tmpSbjreg).then((res1) => {
 									if(res1.rowsAffected == 1){
@@ -178,7 +185,7 @@ class SignIn extends Component {
 									subjDone = true;
 								}
 
-								axios.get('https://017cc9ffbcaa.ngrok.io/api/getTopicsInSubjects/'+subjId, {})
+								axios.get('https://9c5c3dcf3ace.ngrok.io/api/getTopicsInSubjects/'+subjId, {})
 								.then(res => {
 									
 									
@@ -221,7 +228,7 @@ class SignIn extends Component {
 												});
 
 												//TODO: get Question from server where questions.objectives_id = obj.id
-												axios.get('https://017cc9ffbcaa.ngrok.io/api/getQuestionsInObjective/'+obj.id, {})
+												axios.get('https://9c5c3dcf3ace.ngrok.io/api/getQuestionsInObjective/'+obj.id, {})
 												.then(res => {
 													let o, ques = res.data, quesLen = ques.length;
 													if(quesLen > 0){
@@ -348,6 +355,6 @@ const mapStateToProps = (inState) => {
   
   
 // Export components.
-export default connect(mapStateToProps)(SignIn);
+// export default connect(mapStateToProps)(SignIn);
 
-// export default SignIn;
+export default SignIn;

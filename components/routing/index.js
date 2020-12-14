@@ -14,29 +14,37 @@ import UserDash from '../UserDash';
 // import Loading from './components/Loading';
 // import SplashScreen from '../Apploading';
 import AuthAppLoading from '../Loading';
+import SubjDash from '../subjDash';
+import TopicDash from '../topicDash';
+import ObjectiveDash from '../objDash';
+import QuestionDash from '../quesDash';
 // import Navigator from './components/HomeStack';
 
 const AuthStack = createStackNavigator(
   {
     Home: Dash,
     Subscription: Subscription,
-    Login: SignIn,
+    SignIn: SignIn,
     // Logout: LogOut,
-    Register: SignUp,
+    SignUp: SignUp,
   },
   {
     headerMode: 'none',
-    initialRouteName: 'Login',
+    initialRouteName: 'SignIn',
   },
 );
 
 const AppStack = createStackNavigator(
   {
     User: UserDash,
+    SubjDash,
+    TopicDash,
+    ObjectiveDash,
+    QuestionDash
   },
   {
     headerMode: 'none',
-    initialRouteName: 'User',
+    initialRouteName: 'QuestionDash',
   },
 );
 

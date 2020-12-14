@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, StatusBar, View, Text } from 'react-native';
+import {StyleSheet, StatusBar, View, Text, ActivityIndicator } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import AnimatedLoader from "react-native-animated-loader";
-// import Core from "../Core";
 import Database from '../database';
 const db = new Database();
 
@@ -12,13 +11,12 @@ export default class Loading extends React.Component {
 		this.state = {
 			loader: true
         };	
-        // Core.startup();
+       
         StatusBar.setBarStyle('dark-content');
         StatusBar.setBackgroundColor('#F93106');
     } /* End constructor. */
     
 	componentDidMount() {
-        //Core.io.on("connected", function(){
             setTimeout(() => {
                 db.getUser().then((data) => {
                     let len = data.length;
@@ -32,14 +30,7 @@ export default class Loading extends React.Component {
                     console.log(err);
                 })
             }, 1500);
-        //});    
-        
-        // Core.io.on("disconnected", function(){
-		// 	alert('Disconnected from server');
-		// });
-        
-    	// do stuff while splash screen is shown
-        // After having done stuff (such as async tasks) hide the splash screen
+       
         SplashScreen.hide();
     }
 
@@ -57,15 +48,15 @@ export default class Loading extends React.Component {
             <View style={styles.container}>
             <Text style={styles.text}>PREP50</Text>
             <Text style={styles.title}>Success for Sure...</Text>
-            {/* <ActivityIndicator size="large" color="#F93106" /> */}
+            <ActivityIndicator size="large" color="#F93106" />
           
-            <AnimatedLoader
+            {/* <AnimatedLoader
                 visible={loader}
                 overlayColor="#FFFFFF"
                 animationStyle={styles.lottie}
                 speed={1}
                 source={require("../data.json")}
-            />
+            /> */}
             </View>
         );
 	}

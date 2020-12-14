@@ -22,6 +22,10 @@ const styles = StyleSheet.create({
     },
     footer: {
         backgroundColor: '#000000',
+    },
+    lottie: {
+        width: 100,
+        height: 100
     }
 });
  
@@ -122,4 +126,5 @@ const mapStateToProps = (inState) => {
 };
   
 //Export components.
-export default connect(mapStateToProps)(Dash);
+// export default connect(mapStateToProps)(Dash);
+export default(Dash);

@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
+
 import React, { Component, useReducer } from 'react';
 import {StyleSheet, StatusBar} from 'react-native';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
@@ -20,14 +18,15 @@ const styles = StyleSheet.create({
     }
 });
 
-
-export default class ListIconExample extends Component {
+export default class subjDash extends Component {
     constructor(inProps) {
 
         super(inProps);
         
 		this.state = {
-            user: [],
+            subj: [],
+            id:"",
+            subjName:'',
 			loader: true
         };	
         StatusBar.setBarStyle('dark-content');
@@ -35,8 +34,8 @@ export default class ListIconExample extends Component {
     } /* End constructor. */
 
     componentDidMount() {
-		db.getUser().then((res) => {
-            this.setState({ user: res });          
+		db.getSubj().then((res) => {
+            this.setState({ subj: res });          
         }).catch((err) => {
             console.log(err);
         });
@@ -47,9 +46,9 @@ export default class ListIconExample extends Component {
     }
     
     render() {
-        const { user, loader } = this.state;
+        const { subj, loader } = this.state;
         
-        if(user.length < 1){
+        if(subj.length < 1){
             return (
                 <AnimatedLoader
                     visible={loader}
@@ -78,7 +77,15 @@ export default class ListIconExample extends Component {
                                 <Thumbnail source = {require('./img/noUser.jpg')} />
                             </Left>
                             <Body>
-                                <Text>{user[0]['firstname']} {user[0]['othername']} {user[0]['lastname']}</Text>
+                                {
+                                    this.state.subj.map((y)=>{
+                                        return(<Text>{y.subjName}</Text>);
+                                    })
+                                }
+                            {/* <Text>{subj[0]['subjName']}</Text>
+                            <Text>{subj[1]['subjName']}</Text>
+                            <Text>{subj[2]['subjName']}</Text>
+                            <Text>{subj[3]['subjName']}</Text> */}
                                 {/* <Text note>{user[0]['univ']}, {user[0]['dept']}</Text> */}
                             </Body>
                             <Right>
@@ -95,7 +102,7 @@ export default class ListIconExample extends Component {
                                 </Button>
                             </Left>
                             <Body>
-                                <Text>{user[0]['phone']}</Text>
+                                {/* <Text>{user[0]['phone']}</Text> */}
                             </Body>
                             <Right/>
                         </ListItem>
