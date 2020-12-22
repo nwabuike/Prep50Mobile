@@ -348,15 +348,16 @@ export default class Database {
           });
         }
 
-        getTopic(){
+        getTopic(id){
           return new Promise((resolve) => {
             const TopicDash = [];
-            // let subject_id =subject_id;
-        
+            // let id =subject_id;
+        //  let id =1;
             this.initDB().then((db) => {
               db.transaction((tx) => {
+                // let id=4;
                 // SELECT * FROM topics WHERE subject_id= 'subject_id
-                tx.executeSql("SELECT * FROM topics ", []).then(([tx,results]) => {
+                tx.executeSql(`SELECT * FROM topics WHERE subject_id="${id}" `, []).then(([tx,results]) => {
                   var len = results.rows.length;
 
                   if(len == 0){
@@ -365,7 +366,7 @@ export default class Database {
                     console.log(results, 'All record found');
                   }
                   
-                  for (let i = 0; i < len; i++) {
+                  for (let i = 0; i < len; i++) { 
                     let row = results.rows.item(i);
                     
                     const {  id, topic, subject_id} = row;
@@ -388,19 +389,19 @@ export default class Database {
             });
           });
         }
-        getobj(){
+        getobj(id){
           return new Promise((resolve) => {
-            const TopicDash = [];
+            const QuesDash = [];
             // let subject_id =subject_id;
         
             this.initDB().then((db) => {
               db.transaction((tx) => {
                 // SELECT * FROM topics WHERE subject_id= 'subject_id
-                tx.executeSql("SELECT * FROM objectives ", []).then(([tx,results]) => {
+                tx.executeSql(`SELECT * FROM objectives WHERE topic_id="${id}" `, []).then(([tx,results]) => {
                   var len = results.rows.length;
 
                   if(len == 0){
-                    console.log(results, 'No record found');
+                    console.log(results, 'No record found in Ques');
                   }else{
                     console.log(results, 'All record found');
                   }
@@ -409,7 +410,7 @@ export default class Database {
                     let row = results.rows.item(i);
                     
                     const {  id, title, topic_id, subject_id} = row;
-                    TopicDash.push({
+                    QuesDash.push({
                       id,
                       topic_id,
                       subject_id,
@@ -417,7 +418,7 @@ export default class Database {
                     });
                   }
                   
-                  resolve(TopicDash);
+                  resolve(QuesDash);
                 });
               }).then((result) => {
                 this.closeDatabase(db);
@@ -430,7 +431,7 @@ export default class Database {
           });
         }
 
-        getques(){
+        getques(id){
           return new Promise((resolve) => {
             const QuestionDash = [];
             // let subject_id =subject_id;
@@ -438,7 +439,7 @@ export default class Database {
             this.initDB().then((db) => {
               db.transaction((tx) => {
                 // SELECT * FROM topics WHERE subject_id= 'subject_id
-                tx.executeSql("SELECT * FROM questions ", []).then(([tx,results]) => {
+                tx.executeSql(`SELECT * FROM questions WHERE objective_id="${id}" `, []).then(([tx,results]) => {
                   var len = results.rows.length;
 
                   if(len == 0){

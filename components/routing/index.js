@@ -18,15 +18,16 @@ import SubjDash from '../subjDash';
 import TopicDash from '../topicDash';
 import ObjectiveDash from '../objDash';
 import QuestionDash from '../quesDash';
+import SignOut from '../gateway/logOut';
+import IndexQues from '../Questions';
 // import Navigator from './components/HomeStack';
 
 const AuthStack = createStackNavigator(
   {
-    Home: Dash,
-    Subscription: Subscription,
-    SignIn: SignIn,
-    // Logout: LogOut,
-    SignUp: SignUp,
+    
+    SignIn,
+    SignOut,
+    SignUp,
   },
   {
     headerMode: 'none',
@@ -36,15 +37,18 @@ const AuthStack = createStackNavigator(
 
 const AppStack = createStackNavigator(
   {
-    User: UserDash,
+    Subscription,
+    UserDash,
     SubjDash,
     TopicDash,
     ObjectiveDash,
-    QuestionDash
+    QuestionDash,
+    Dash,
+    IndexQues
   },
   {
     headerMode: 'none',
-    initialRouteName: 'QuestionDash',
+    initialRouteName: 'Dash',
   },
 );
 

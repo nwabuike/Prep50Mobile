@@ -109,7 +109,7 @@ class SignIn extends Component {
 			this.submitErr('Login Error', 'Your Phone number are required!');
         } else {
 			console.log( this.state.phone.trim());
-            axios.post('https://9c5c3dcf3ace.ngrok.io/api/login', { phone: this.state.phone })
+            axios.post('https://f4e7570aa9fa.ngrok.io/api/login', { phone: this.state.phone })
             .then(res => {
 				console.log(res);
                 if(res.data.message == undefined){
@@ -118,7 +118,8 @@ class SignIn extends Component {
 					let uActivities = [];
 					
 					uData['firstname'] = res.data.user.firstname;
-					uData['lName'] = res.data.user.lastname;
+					uData['lastname'] = res.data.user.lastname;
+					uData['othername'] = res.data.user.othername;
 					uData['phone'] = res.data.user.phone;
 					uData['gender'] = res.data.user.gender;
 					uData['email'] = res.data.user.email;
@@ -139,134 +140,179 @@ class SignIn extends Component {
 					//insert user
 				  db.addUser(uData)
 				  .then((res) => {
-						if(res.rowsAffected == 1){
-							//insert Activities
-							let actLen = uActivities.length;
-							for(let j = 0; j < actLen; j++){
-								let tmpAct = uActivities[j];
-								
-								db.addUserActivities(tmpAct).then((res6) => {
-									if(res6.rowsAffected == 1){
-										console.log('inserted an activity');										
-									}
-								}).then(()=>{
-                                    console.log(uData,'user inserted');
-								})
-
-								.catch((err) => {
-									console.log(err);
-								});
-							}
-							
-							
-							let subjDone = false;
-							let topicDone = false;
-							let objDone = false;
-							let quesDone = false;
-							console.log('Reached here');
-							//insert userSubjects
-							for(let i = 0; i < 4; i++){
-								console.log('uSubjReg');
-								let tmpSbjreg = uSubjReg[i];
-
-
-								db.addUserSubj(tmpSbjreg).then((res1) => {
-									if(res1.rowsAffected == 1){
-										console.log('inserted a subject');										
-									}
-								}).catch((err) => {
-									console.log(err);
-								});
-
-								//GET topics and objectives in topic
-								let subjId = uSubjReg[i]['subject_id'];
-								
-								if(i == 3){
-									subjDone = true;
-								}
-
-								axios.get('https://9c5c3dcf3ace.ngrok.io/api/getTopicsInSubjects/'+subjId, {})
-								.then(res => {
-									
-									
-									let k, topic = res.data, topicLen = topic.length;
-									if(topicLen > 0){
-										for(k = 0; k < topicLen; k++){
-											if(subjDone == true && k == (topicLen - 1)){
-												topicDone = true;
-											}
-											let topicId = topic[k]['id'];
-											let topicName = topic[k]['topic'];
-											let subjId = topic[k]['subject_id'];
-
-											db.addUserTopic(topicId, topicName, subjId).then((rest) => {
-												if(rest.rowsAffected == 1){
-													console.log('inserted a topic');										
+					  
+					if (res.rowsAffected == 1) {
+						//insert Activities
+						// console.log(uSubjReg, 'not seen de subject registered');
+						let uActivities = 0;
+						let actLen = uActivities.length;
+						for (let j = 0; j < actLen; j++) {
+						  let tmpAct = uActivities[j];
+	  
+						  db.addUserActivities(tmpAct)
+							.then((res6) => {
+							  if (res6.rowsAffected == 1) {
+								console.log('inserted an activity');
+								this.setState({isVisible: false});
+								this.props.navigation.navigate('Dash');
+							  }
+							})
+							.catch((err) => {
+							  console.log(err);
+							});
+						}
+						let subjDone = false;
+						let topicDone = false;
+						let objDone = false;
+						let quesDone = false;
+	  
+						//   console.log('About to enter subject section');
+						//   console.log(uSubjReg, 'All subject');
+	  
+						uSubjReg.forEach((element) => {
+						  // let tmpSbjreg= [];
+						  // console.log(element.pivot.subject_id);
+						  // console.log(element.subj);
+	  
+						  db.addUserSubj(element.pivot.subject_id, element.subj)
+							.then((res1) => {
+							  if (res1.rowsAffected == 1) {
+								console.log('inserted a subject');
+							  }
+							  // for (let i = 0; i < 4; i++) {
+	  
+							  // if (i == 3) {
+							  //   subjDone = true;
+							  // }
+	  
+							  // console.log(subjId);
+							  axios
+								.get(
+								  'https://f4e7570aa9fa.ngrok.io/api/getTopicsInSubjects/' +
+									element.pivot.subject_id, +'?limit=3',
+								  {},
+								)
+	  
+								.then((res) => {
+								  let topic = res.data;
+	  
+								  topic.forEach((addTopics) => {
+									// console.log(addTopics.topic);
+									// console.log(addTopics.subj_id);
+									//
+									db.addUserTopic(
+									  addTopics.id,
+									  addTopics.topic,
+									  addTopics.subj_id,
+									)
+									  .then((rest) => {
+										if (rest.rowsAffected == 1) {
+										  console.log('inserted a topic');
+										}
+									  })
+									  .catch((err) => {
+										console.log(err);
+									  });
+									// wait(1000);
+	  
+									// objectives
+									axios
+									  .get(
+										'https://f4e7570aa9fa.ngrok.io/api/objectiveAllinTopic/' +
+										  addTopics.id, +'?limit=3',
+										{},
+									  )
+									  .then((res) => {
+										let objectives = res.data;
+										objectives
+										  .forEach((addObjective) => {
+											// console.log(addObjective.topic_id);
+											// console.log(addObjective.subject_id);
+											// console.log(addObjective.title);
+											//
+											
+											db.addUserObj(
+											  addObjective.id,
+											  addObjective.title,
+											  addObjective.topic_id,
+											  addObjective.subject_id,
+											)
+											  .then((rest) => {
+												if (rest.rowsAffected == 1) {
+												  console.log(
+													'inserted a Objectives',
+												  );
 												}
 												
-											}).catch((err) => {
+											  })
+											  .catch((err) => {
 												console.log(err);
-											});
-
-
-											let topicObj = topic[k]['objectives'];
-											let topicObjLen  = topicObj.length;
-											let l;
-
-											for(l = 0; l < topicObjLen; l++){
-												if(subjDone == true && topicDone == true && l == (topicObjLen - 1)){
-													objDone = true;
-												}
-												let obj = topicObj[l];
-
-												db.addUserObj(obj).then((rest) => {
-													if(rest.rowsAffected == 1){
-														console.log('inserted an Objective');										
-													}
-												}).catch((err) => {
-													console.log(err);
+											  });
+											// wait(1000);
+	  
+											axios
+											  .get(
+												'https://f4e7570aa9fa.ngrok.io/api/getQuestionsInObjective/' +
+												  addObjective.id, +'?limit=3',
+												{},
+											  )
+											  .then((res) => {
+												// var interval = 1000;
+												let questions = res.data;
+												questions.forEach((addQuestions) => {
+												  // console.log(addQuestions.question);
+												  // console.log(addQuestions.optionA);
+												  //
+												 
+												  db.addUserQuestion(
+													addQuestions.id,
+													addQuestions.topic_id,
+													addQuestions.objective_id,
+													addQuestions.question,
+													addQuestions.optionA,
+													addQuestions.optionB,
+													addQuestions.optionC,
+													addQuestions.optionD,
+													addQuestions.answer,
+													addQuestions.passage,
+													addQuestions.quesYear,
+													addQuestions.quesYearNum,
+												  )
+													.then((rest) => {
+													  if (rest.rowsAffected == 1) {
+														console.log(
+														  'inserted a question',
+														);
+													  }
+													})
+													.catch((err) => {
+													  console.log(err);
+													});
 												});
-
-												//TODO: get Question from server where questions.objectives_id = obj.id
-												axios.get('https://9c5c3dcf3ace.ngrok.io/api/getQuestionsInObjective/'+obj.id, {})
-												.then(res => {
-													let o, ques = res.data, quesLen = ques.length;
-													if(quesLen > 0){
-														for(o = 0; o < quesLen; o++){
-															let qs = ques[o];
-															db.addUserQuestion(qs, topicId).then((rest1) => {
-																if(rest1.rowsAffected == 1){
-																	console.log('inserted a Question');
-																	if(subjDone == true && topicDone == true && objDone == true && o == quesLen){
-																		quesDone = true;
-																	}
-																	
-																	if(subjDone && topicDone && objDone && quesDone){
-																		this.setState({ isVisible: false });
-																		this.props.navigation.navigate('Dash');
-																	}																	
-																	
-																} 
-															}).catch((err) => {
-																console.log(err);
-															});
-														}
-													}
-												})
-												.catch((error) => {
-													console.log(error)
-												});
-											}
-										}
-									}
-								})
+											  }) // Ends Questions
+											  .catch((error) => {
+												console.log(error);
+											  });
+										  })
+										  .catch((error) => {
+											console.log(error);
+										  });
+									  }); // Objectives Ends
+								  }); //topics ends
+								}) // Ends Sub Subjects
 								.catch((error) => {
-									console.log(error)
+								  console.log(error);
 								});
-							}						
-							 
-						}
-					}).catch((err) => {
+							  // }
+							})
+							.catch((err) => {
+							  console.log(err);
+							});
+						}); // end subject section
+						
+					  } // Main subjects Ends
+					
+				  }).catch((err) => {
 						console.log(err);
 					});
                 } else {

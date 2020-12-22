@@ -49,11 +49,16 @@ class Dash extends React.Component {
     }
 
     goToUserProfile(){
+        // e.preventDefault();
         this.props.navigation.navigate('UserDash');
+    }
+    toSignOut(){
+        // e.preventDefault();
+        this.props.navigation.navigate('SignOut');
     }
 
     componentDidMount() {
-		db.getUserSubjects().then((res) => {
+		db.getSubj().then((res) => {
             this.setState({ subj: res });          
         }).catch((err) => {
             console.log(err);
@@ -91,22 +96,22 @@ class Dash extends React.Component {
                             subj.map(sb => 
                                 <ListItem icon key={sb.id}>
                                     <Left>
-                                        <Button style={{ backgroundColor: "#0AC9F1" }}>
-                                            <Icon active name="book" />
+                                    <Button style={{ backgroundColor: "red" }}>
+                                            <Icon active name="book" style={{ color: "white",backgroundColor: "red"  }} />
                                         </Button>
                                     </Left>
                                     <Body>
-                                        <Text>{sb.subj}</Text>
+                                        <Text>{sb.subjName}</Text>
                                     </Body>
                                     <Right>
-                                        <Button transparent onPress={(e) => this.toSubjDash(e, sb.id, sb.subj)}>
+                                        <Button transparent onPress={(e) => this.toSubjDash(e, sb.id, sb.subjName)}>
                                             <Icon active name="arrow-forward" />
                                         </Button>
                                     </Right>
                                 </ListItem>
                             )}
                              <Text>Signed in!</Text>
-      <Button title="Sign out" onPress={signOut} />
+      <Button title="Sign out" onPress={(e) =>this.toSignOut()} />
                     </Content>
                     <Footer style={styles.footer}></Footer>
                 </Container>

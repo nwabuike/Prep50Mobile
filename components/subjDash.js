@@ -1,6 +1,6 @@
 
-import React, { Component, useReducer } from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import React, { Component, useReducer, useState } from 'react';
+import {StyleSheet, StatusBar, TouchableOpacity, FlatList, SafeAreaView} from 'react-native';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from "react-native-animated-loader";
@@ -15,10 +15,17 @@ const styles = StyleSheet.create({
     lottie: {
         width: 100,
         height: 100
-    }
+    },
+    ButtonNav:{
+        padding:20,
+        flex:1,
+        alignContent: 'center',
+        justifyContent: 'center'
+   }
 });
 
 export default class subjDash extends Component {
+    
     constructor(inProps) {
 
         super(inProps);
@@ -41,9 +48,14 @@ export default class subjDash extends Component {
         });
     }
 
-    toSubscription(){
-        this.props.navigation.navigate('Subscription');
-    }
+    // toSubscription(){
+    //     this.props.navigation.navigate('Subscription');
+    // }
+    // toTopicDash(){
+    //     // e.preventDefault();
+
+    //     this.props.navigation.navigate('Topic',item);
+    // }
     
     render() {
         const { subj, loader } = this.state;
@@ -60,89 +72,30 @@ export default class subjDash extends Component {
             )
         } else {
             return (
+                <SafeAreaView style={{flex: 1}}>
                 <Container>
-                    <Header noLeft style={styles.header}>
+                    <Header span noLeft style={styles.header}>
                         <Left/>
                         <Body>
-                            <Title>PREP50</Title>
+                            <Title>Subject</Title>
                         </Body>
                         <Right/>
                     </Header>
+                    
                     <Content>
-                        <Separator bordered>
-                            <Text>BIO</Text>
-                        </Separator>
-                        <ListItem avatar>
-                            <Left>
-                                <Thumbnail source = {require('./img/noUser.jpg')} />
-                            </Left>
-                            <Body>
-                                {
-                                    this.state.subj.map((y)=>{
-                                        return(<Text>{y.subjName}</Text>);
-                                    })
-                                }
-                            {/* <Text>{subj[0]['subjName']}</Text>
-                            <Text>{subj[1]['subjName']}</Text>
-                            <Text>{subj[2]['subjName']}</Text>
-                            <Text>{subj[3]['subjName']}</Text> */}
-                                {/* <Text note>{user[0]['univ']}, {user[0]['dept']}</Text> */}
-                            </Body>
-                            <Right>
-                                {/* <Text note>{user[0]['dateReg']}</Text> */}
-                            </Right>
-                        </ListItem>
-                        <Separator bordered>
-                            <Text>ACCOUNT</Text>
-                        </Separator>
-                        <ListItem icon>
-                            <Left>
-                                <Button style={{ backgroundColor: "#727C6E" }}>
-                                    <Icon active name="unlock" />
-                                </Button>
-                            </Left>
-                            <Body>
-                                {/* <Text>{user[0]['phone']}</Text> */}
-                            </Body>
-                            <Right/>
-                        </ListItem>
-                        <ListItem icon>
-                            <Left>
-                            <Button style={{ backgroundColor: "#007AFF" }}>
-                                <Icon active name="cash" />
-                            </Button>
-                            </Left>
-                            <Body>
-                                <Text>Demo Account</Text>
-                            </Body>
-                            <Right>
-                                <Button onPress={() => this.toSubscription()}>
-                                    <Text>Pay</Text>
-                                    <Icon active name="arrow-forward" />
-                                </Button>                            
-                            </Right>
-                        </ListItem>
-                        <Separator bordered>
-                            <Text>APP</Text>
-                        </Separator>
-                        <ListItem icon>
-                            <Left>
-                            <Button style={{ backgroundColor: "#F93106" }}>
-                                <Icon active name="download" />
-                            </Button>
-                            </Left>
-                            <Body>
-                                <Text>Update</Text>
-                            </Body>
-                            <Right>
-                                <Button>
-                                    <Text>Check</Text>
-                                    <Icon active name="arrow-forward" />
-                                </Button>                            
-                            </Right>
-                        </ListItem>
+                        
+                    <FlatList data={subj}
+          renderItem={({item}) => (
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('TopicDash', item)}>
+                    <Text style={styles.container}>{item.subjName}</Text>
+                       </TouchableOpacity>
+          )}
+                       />
+                       
                     </Content>
+                    
                 </Container>
+                </SafeAreaView>
             );
         }
     }

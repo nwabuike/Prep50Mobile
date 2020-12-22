@@ -1,9 +1,10 @@
 import React, { Component, useReducer } from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, FlatList, TouchableOpacity} from 'react-native';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from "react-native-animated-loader";
 const db = new Database();
+// const { itemId, otherParam } = route.params;
 const styles = StyleSheet.create({
 	header: {
 		backgroundColor: '#F93106',
@@ -14,7 +15,8 @@ const styles = StyleSheet.create({
     lottie: {
         width: 100,
         height: 100
-    }
+    },
+   
 });
 
 export default class topicDash extends Component {
@@ -24,26 +26,26 @@ export default class topicDash extends Component {
         
 		this.state = {
             topic: [],
-			loader: true
+            loader: true,
+            // id:'id'
         };	
         StatusBar.setBarStyle('dark-content');
         StatusBar.setBackgroundColor('#F93106');
     } /* End constructor. */
 
     componentDidMount() {
-		db.getTopic().then((res) => {
+        // const id = route.params.id;
+        let id = this.props.navigation.getParam('id');
+        // console.log(id, 'is Here');
+        
+		db.getTopic(id).then((res) => {
             this.setState({ topic: res });          
         }).catch((err) => {
             console.log(err);
         });
     }
-
-    toSubscription(){
-        this.props.navigation.navigate('Subscription');
-    }
-    
     render() {
-        const { topic, loader } = this.state;
+        const { topic, loader} = this.state;
         
         if(topic.length < 1){
             // console.log('no record found');
@@ -73,16 +75,14 @@ export default class topicDash extends Component {
                             <Text>BIO</Text>
                         </Separator>
                         <ListItem avatar>
-                            <Left>
-                                <Thumbnail source = {require('./img/noUser.jpg')} />
-                            </Left>
                             <Body>
-                            {
-                                    this.state.topic.map((y)=>{
-                                        return(<Text>{y.topic}</Text>);
-                                    })
-                                }
-                                {/* <Text note>{user[0]['univ']}, {user[0]['dept']}</Text> */}
+                            <FlatList data={topic}
+          renderItem={({item}) => (
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ObjectiveDash', item)}>
+                    <Text style={styles.container}>{item.topic}</Text>
+                       </TouchableOpacity>
+          )}
+                       />
                             </Body>
                             <Right>
                                 {/* <Text note>{user[0]['dateReg']}</Text> */}

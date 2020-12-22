@@ -1,5 +1,5 @@
 import React, { Component, useReducer } from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar,FlatList, TouchableOpacity} from 'react-native';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from "react-native-animated-loader";
@@ -31,17 +31,15 @@ export default class objDash extends Component {
     } /* End constructor. */
 
     componentDidMount() {
-		db.getobj().then((res) => {
+        let id = this.props.navigation.getParam('id');
+        console.log(id, 'obj');
+		db.getobj(id).then((res) => {
             this.setState({ obj: res });          
         }).catch((err) => {
             console.log(err);
         });
     }
 
-    toSubscription(){
-        this.props.navigation.navigate('Subscription');
-    }
-    
     render() {
         const { obj, loader } = this.state;
         
@@ -69,24 +67,15 @@ export default class objDash extends Component {
                         <Right/>
                     </Header>
                     <Content>
-                        <Separator bordered>
-                            <Text>BIO</Text>
-                        </Separator>
                         <ListItem avatar>
-                            <Left>
-                                <Thumbnail source = {require('./img/noUser.jpg')} />
-                            </Left>
                             <Body>
-                            {
-                                    this.state.obj.map((y)=>{
-                                        return(<Text>{y.title}</Text>);
-                                    })
-                                }
-                            {/* <Text>{obj[0]['obj']}</Text>
-                            <Text>{obj[1]['obj']}</Text>
-                            <Text>{obj[2]['obj']}</Text>
-                            <Text>{obj[3]['obj']}</Text> */}
-                                {/* <Text note>{user[0]['univ']}, {user[0]['dept']}</Text> */}
+                            <FlatList data={obj}
+          renderItem={({item}) => (
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('QuestionDash', item)}>
+                    <Text style={styles.container}>{item.title}</Text>
+                       </TouchableOpacity>
+          )}
+                       />
                             </Body>
                             <Right>
                                 {/* <Text note>{user[0]['dateReg']}</Text> */}

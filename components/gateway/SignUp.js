@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 // import AnimatedLoader from "react-native-animated-loader";
+// import {Picker} from '@react-native-community/picker';
 import {
   Body,
   Content,
@@ -107,6 +108,7 @@ class SignUp extends Component {
     super(inProps);
 
     this.state = {
+      language: 'java',
       firstname: '',
       lastname: '',
       othername: '',
@@ -202,7 +204,7 @@ class SignUp extends Component {
       );
       // const uniqueId = DeviceInfo.getUniqueID();
       axios
-        .post('https://9c5c3dcf3ace.ngrok.io/api/register', {
+        .post('https://f4e7570aa9fa.ngrok.io/api/register', {
           firstname: this.state.firstname.trim(),
           othername: this.state.othername.trim(),
           lastname: this.state.lastname.trim(),
@@ -258,18 +260,17 @@ class SignUp extends Component {
                       .then((res6) => {
                         if (res6.rowsAffected == 1) {
                           console.log('inserted an activity');
-                          this.setState({isVisible: false});
-                          this.props.navigation.navigate('Dash');
+                          
                         }
                       })
                       .catch((err) => {
                         console.log(err);
                       });
                   }
-                  let subjDone = false;
-                  let topicDone = false;
-                  let objDone = false;
-                  let quesDone = false;
+                  // let subjDone = false;
+                  // let topicDone = false;
+                  // let objDone = false;
+                  // let quesDone = false;
 
                   //   console.log('About to enter subject section');
                   //   console.log(uSubjReg, 'All subject');
@@ -293,7 +294,7 @@ class SignUp extends Component {
                         // console.log(subjId);
                         axios
                           .get(
-                            'https://9c5c3dcf3ace.ngrok.io/api/getTopicsInSubjects/' +
+                            'https://f4e7570aa9fa.ngrok.io/api/getTopicsInSubjects/' +
                               element.pivot.subject_id,
                             {},
                           )
@@ -323,7 +324,7 @@ class SignUp extends Component {
                               // objectives
                               axios
                                 .get(
-                                  'https://9c5c3dcf3ace.ngrok.io/api/objectiveAllinTopic/' +
+                                  'https://f4e7570aa9fa.ngrok.io/api/objectiveAllinTopic/' +
                                     addTopics.id,
                                   {},
                                 )
@@ -355,7 +356,7 @@ class SignUp extends Component {
 
                                       axios
                                         .get(
-                                          'https://9c5c3dcf3ace.ngrok.io/api/getQuestionsInObjective/' +
+                                          'https://f4e7570aa9fa.ngrok.io/api/getQuestionsInObjective/' +
                                             addObjective.id,
                                           {},
                                         )
@@ -411,135 +412,7 @@ class SignUp extends Component {
                         console.log(err);
                       });
                   }); // end subject section
-                  //insert userSubjects
-                  //   for (let i = 0; i < 4; i++) {
-                  //     // let tmpSbjreg = uSubjReg[i];
-
-                  //     // db.addUserSubj(tmpSbjreg).then((res1) => {
-                  //     // 	if (res1.rowsAffected == 1) {
-                  //     // 		console.log('inserted a subject');
-                  //     // 	}
-                  //     // }).catch((err) => {
-                  //     // 	console.log(err);
-                  //     // });
-
-                  //     //GET topics and objectives in topic
-                  //     let subjId = tmpSbjreg[i]['subject_id'];
-
-                  //     if (i == 3) {
-                  //       subjDone = true;
-                  //     }
-
-                  //     axios
-                  //       .get(
-                  //         'https://13839a9d96c6.ngrok.io/api/getTopicsInSubjects/' +
-                  //           subjId,
-                  //         {},
-                  //       )
-                  //       .then((res) => {
-                  //         let k,
-                  //           topic = res.data,
-                  //           topicLen = topic.length;
-                  //         if (topicLen > 0) {
-                  //           for (k = 0; k < topicLen; k++) {
-                  //             if (subjDone == true && k == topicLen - 1) {
-                  //               topicDone = true;
-                  //             }
-                  //             let topicId = topic[k]['id'];
-                  //             let topicName = topic[k]['topic'];
-                  //             let subjId = topic[k]['subject_id'];
-
-                  //             db.addUserTopic(topicId, topicName, subjId)
-                  //               .then((rest) => {
-                  //                 if (rest.rowsAffected == 1) {
-                  //                   console.log('inserted a topic');
-                  //                 }
-                  //               })
-                  //               .catch((err) => {
-                  //                 console.log(err);
-                  //               });
-
-                  //             let topicObj = topic[k]['objectives'];
-                  //             let topicObjLen = topicObj.length;
-                  //             let l;
-
-                  //             for (l = 0; l < topicObjLen; l++) {
-                  //               if (
-                  //                 subjDone == true &&
-                  //                 topicDone == true &&
-                  //                 l == topicObjLen - 1
-                  //               ) {
-                  //                 objDone = true;
-                  //               }
-                  //               let obj = topicObj[l];
-
-                  //               db.addUserObj(obj)
-                  //                 .then((rest) => {
-                  //                   if (rest.rowsAffected == 1) {
-                  //                     console.log('inserted an Objective');
-                  //                   }
-                  //                 })
-                  //                 .catch((err) => {
-                  //                   console.log(err);
-                  //                 });
-
-                  //               //TODO: get Question from server where questions.objectives_id = obj.id
-                  //               axios
-                  //                 .get(
-                  //                   'https://13839a9d96c6.ngrok.io/api/getQuestionsInObjective/' +
-                  //                     obj.id,
-                  //                   {},
-                  //                 )
-                  //                 .then((res) => {
-                  //                   let o,
-                  //                     ques = res.data,
-                  //                     quesLen = ques.length;
-                  //                   if (quesLen > 0) {
-                  //                     for (o = 0; o < quesLen; o++) {
-                  //                       let qs = ques[o];
-                  //                       db.addUserQuestion(qs, topicId)
-                  //                         .then((rest1) => {
-                  //                           if (rest1.rowsAffected == 1) {
-                  //                             console.log('inserted a Question');
-                  //                             if (
-                  //                               subjDone == true &&
-                  //                               topicDone == true &&
-                  //                               objDone == true &&
-                  //                               o == quesLen
-                  //                             ) {
-                  //                               quesDone = true;
-                  //                             }
-
-                  //                             if (
-                  //                               subjDone &&
-                  //                               topicDone &&
-                  //                               objDone &&
-                  //                               quesDone
-                  //                             ) {
-                  //                               this.setState({isVisible: false});
-                  //                               this.props.navigation.navigate(
-                  //                                 'Dash',
-                  //                               );
-                  //                             }
-                  //                           }
-                  //                         })
-                  //                         .catch((err) => {
-                  //                           console.log(err);
-                  //                         });
-                  //                     }
-                  //                   }
-                  //                 })
-                  //                 .catch((error) => {
-                  //                   console.log(error);
-                  //                 });
-                  //             }
-                  //           }
-                  //         }
-                  //       })
-                  //       .catch((error) => {
-                  //         console.log(error);
-                  //       });
-                  //   }
+                 
                 } // Main subjects Ends
               })
               .then(() => {
@@ -553,7 +426,7 @@ class SignUp extends Component {
           }
         })
         .catch((error) => {
-          // alert('Check your Internet Connnection');
+          alert(error,'Something Went wrong, Opps try Again later');
           console.log(error);
         });
     }
