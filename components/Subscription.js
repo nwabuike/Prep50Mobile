@@ -9,6 +9,7 @@ import RNPaystack from 'react-native-paystack';
 import axios from 'axios';
 import Database from '../database';
 import Orientation from "react-native-orientation";
+
 const db = new Database();
 
 let { width, height } = Dimensions.get('window');
@@ -102,7 +103,7 @@ export default class Subscription extends Component {
     
     onSubscribe = (e) => {
 		this.setState({ isVisible: true });
-        e.preventDefault();
+        // e.preventDefault();
         
         let cName = this.state.cName;
         let cNum = this.state.cNum;

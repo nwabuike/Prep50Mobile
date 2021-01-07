@@ -204,7 +204,7 @@ class SignUp extends Component {
       );
       // const uniqueId = DeviceInfo.getUniqueID();
       axios
-        .post('https://f4e7570aa9fa.ngrok.io/api/register', {
+        .post('https://e1e0a99fc3f9.ngrok.io/api/register', {
           firstname: this.state.firstname.trim(),
           othername: this.state.othername.trim(),
           lastname: this.state.lastname.trim(),
@@ -294,7 +294,7 @@ class SignUp extends Component {
                         // console.log(subjId);
                         axios
                           .get(
-                            'https://f4e7570aa9fa.ngrok.io/api/getTopicsInSubjects/' +
+                            'https://e1e0a99fc3f9.ngrok.io/api/getTopicsInSubjects/' +
                               element.pivot.subject_id,
                             {},
                           )
@@ -324,7 +324,7 @@ class SignUp extends Component {
                               // objectives
                               axios
                                 .get(
-                                  'https://f4e7570aa9fa.ngrok.io/api/objectiveAllinTopic/' +
+                                  'https://e1e0a99fc3f9.ngrok.io/api/objectiveAllinTopic/' +
                                     addTopics.id,
                                   {},
                                 )
@@ -356,7 +356,7 @@ class SignUp extends Component {
 
                                       axios
                                         .get(
-                                          'https://f4e7570aa9fa.ngrok.io/api/getQuestionsInObjective/' +
+                                          'https://e1e0a99fc3f9.ngrok.io/api/getQuestionsInObjective/' +
                                             addObjective.id,
                                           {},
                                         )
@@ -404,7 +404,7 @@ class SignUp extends Component {
                             }); //topics ends
                           }) // Ends Sub Subjects
                           .catch((error) => {
-                            console.log(error);
+                            console.log(error, 'Stopped at Subject');
                           });
                         // }
                       })
@@ -414,16 +414,20 @@ class SignUp extends Component {
                   }); // end subject section
                  
                 } // Main subjects Ends
-              })
-              .then(() => {
-                console.log('All inserted');
-                this.setState({isVisible: false});
-                this.props.navigation.navigate('Dash');
+              }).then(()=>{
+                this.setState({ isVisible: false });
+            this.props.navigation.navigate('Dash');
+            alert(res.data.message);
               })
               .catch((err) => {
                 console.log(err);
               });
-          }
+              
+          } else {
+            this.setState({ isVisible: false });
+            this.props.navigation.navigate('Dash');
+            alert(res.data.message);                    
+                  }
         })
         .catch((error) => {
           alert(error,'Something Went wrong, Opps try Again later');

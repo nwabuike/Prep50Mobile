@@ -1,4 +1,4 @@
-import React, {Component, useReducer, useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   StatusBar,
@@ -7,29 +7,24 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import {Overlay, CheckBox} from 'react-native-elements';
 import {
   Container,
   Header,
-  Content,
-  Button,
-  ListItem,
-  Item,
-  CardItem,
-  Card,
-  // CheckBox,
-  Text,
-  Icon,
-  Footer,
-  FooterTab,
-  Left,
-  Radio,
-  Body,
-  Right,
-  Thumbnail,
   Title,
-  Separator,
+  Button,
+  IconNB,
+  DeckSwiper,
+  Card,
+  CardItem,
+  Icon,
+  Thumbnail,
+  Radio,
+  Text,
+  Left,
+  Right,
   List,
+  ListItem,
+  Body,
 } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from 'react-native-animated-loader';
@@ -57,7 +52,6 @@ export default class quesDash extends Component {
 
     this.state = {
       ques: [],
-      option: '',
       formError: '',
       isVisible: false,
       nameVisible: true,
@@ -67,79 +61,46 @@ export default class quesDash extends Component {
       activeQuestionIndex: 0,
       answered: false,
       answerCorrect: false,
+      optionA: false,
+      optionB: false,
+      optionC: false,
+      optionD: false,
     };
     StatusBar.setBarStyle('dark-content');
     StatusBar.setBackgroundColor('#F93106');
   } /* End constructor. */
-  onChangeText = (key, val) => {
-    if (key == 'subj4') {
-      if (val == this.state.subj2 || val == this.state.subj3) {
-        alert('Please dont select same subject twice');
-      } else {
-        this.setState({[key]: val});
-      }
-    } else if (key == 'subj2') {
-      if (val == this.state.subj3 || val == this.state.subj4) {
-        alert('Please dont select same subject twice');
-      } else {
-        this.setState({[key]: val});
-      }
-    } else if (key == 'subj3') {
-      if (val == this.state.subj4 || val == this.state.subj2) {
-        alert('Please dont select same subject twice');
-      } else {
-        this.setState({[key]: val});
-      }
-    } else {
-      this.setState({[key]: val});
-    }
-  };
-  handlePass = (text) => {
-    this.setState({pass: text});
-  };
-  answer = (correct) => {
-    this.setState(
-      (state) => {
-        const nextState = {answered: true};
-
-        if (correct) {
-          nextState.correctCount = state.correctCount + 1;
-          nextState.answerCorrect = true;
-        } else {
-          nextState.answerCorrect = false;
-        }
-
-        return nextState;
-      },
-      () => {
-        setTimeout(() => this.nextQuestion(), 750);
-      },
-    );
-  };
-
-  nextQuestion = () => {
-    this.setState((state) => {
-      const nextIndex = state.activeQuestionIndex + 1;
-
-      if (nextIndex >= state.totalCount) {
-        return this.props.navigation.popToTop();
-      }
-
-      return {
-        activeQuestionIndex: nextIndex,
-        answered: false,
-      };
+  toggleOptionA() {
+    this.setState({
+      optionA: true,
+      optionB: false,
+      optionC: false,
+      optionD: false,
     });
-  };
-
-  onSubmit = (e) => {
-    this.setState({isVisible: true});
-    var err = 0;
-
-    if (this.state.option == '') {
-      err = 1;
-    }
-  };
+  }
+  toggleOptionB() {
+    this.setState({
+      optionA: false,
+      optionB: true,
+      optionC: false,
+      optionD: false,
+    });
+  }
+  toggleOptionC() {
+    this.setState({
+      optionA: false,
+      optionB: false,
+      optionC: true,
+      optionD: false,
+    });
+  }
+  toggleOptionD() {
+    this.setState({
+      optionA: false,
+      optionB: false,
+      optionC: false,
+      optionD: true,
+    });
+  }
   componentDidMount() {
     let id = this.props.navigation.getParam('id');
     console.log(id, 'Question page');
@@ -151,16 +112,8 @@ export default class quesDash extends Component {
         console.log(err);
       });
   }
-
-  toSubscription() {
-    this.props.navigation.navigate('Subscription');
-  }
-
   render() {
     const {ques, loader} = this.state;
-    const questions = this.props.navigation.getParam('questions', []);
-    const question = questions[this.state.activeQuestionIndex];
-
     if (ques.length < 1) {
       // console.log('no record found');
       return (
@@ -174,111 +127,120 @@ export default class quesDash extends Component {
       );
     } else {
       return (
-        <Container>
-          <Header noLeft style={styles.header}>
-            <Left />
-            <Body>
-              <Title>Question</Title>
-            </Body>
-            <Right />
-          </Header>
-          <Content>
-            {ques.map((question) => (
-              <Card icon key={question.id}>
-                <CardItem bordered>
-                  <List>
-                    <ListItem>
-                      {/* <Body> */}
-                      <Text>{question.question}</Text>
-                      {/* </Body> */}
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox
-                        center
-                        title="A"
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checked={this.state.option == 'optionA' ? true : false}
-                        onPress={(val) =>
-                          this.onChangeText('option', 'optionA')
-                        }
-                      />
-                      <Body>
-                        <Text>{question.optionA}</Text>
-                      </Body>
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox
-                        center
-                        title="B"
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checked={this.state.option == 'optionB' ? true : false}
-                        onPress={(val) =>
-                          this.onChangeText('option', 'optionB')
-                        }
-                      />
-                      <Body>
-                        <Text>{question.optionB}</Text>
-                      </Body>
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox
-                        center
-                        title="C"
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checked={this.state.option == 'optionC' ? true : false}
-                        onPress={(val) =>
-                          this.onChangeText('option', 'optionC')
-                        }
-                      />
-                      <Body>
-                        <Text>{question.optionC}</Text>
-                      </Body>
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox
-                        center
-                        title="D"
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checked={this.state.option == 'optionD' ? true : false}
-                        onPress={(val) =>
-                          this.onChangeText('option', 'optionD')
-                        }
-                      />
-                      <Body>
-                        <Text>{question.optionD}</Text>
-                      </Body>
-                    </ListItem>
-                  </List>
-                </CardItem>
-              </Card>
-            ))}
-            <Body style={styles.button}>
+        <Container style={styles.container}>
+          <Header style={styles.header}>
+            <Left>
               <Button
-                buttonStyle={{backgroundColor: 'red'}}
-                title="Sign Up"
-                //onPress={() => { onSignIn().then(() => navigate("SignedIn"));}}
-                onPress={() => {
-                  this.onSubmit();
-                }}
-              />
+                transparent
+                onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back-sharp" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>QuestionDash</Title>
             </Body>
-          </Content>
-          {/* <Footer>
-          <FooterTab>
-            <Button full>
-              <Text>Footer</Text>
+          </Header>
+          <View style={{flex: 1, padding: 12}}>
+            <DeckSwiper
+              ref={(mr) => (this._deckSwiper = mr)}
+              dataSource={ques}
+              looping={false}
+              renderEmpty={() => (
+                <View style={{alignSelf: 'center'}}>
+                  <Text>Over</Text>
+                </View>
+              )}
+              renderItem={(item) => (
+                <Card style={{elevation: 3}} key={item.id}>
+                  <CardItem style={{marginTop: 20}}>
+                    <Body>
+                      <Text>{item.question}</Text>
+                    </Body>
+                  </CardItem>
+                  <CardItem
+                    style={{marginTop: 40}}
+                    selected={this.state.optionA}
+                    onPress={() => this.toggleOptionA()}>
+                    <Left>
+                      <Text>{item.optionA}</Text>
+                    </Left>
+                    <Right>
+                      <Radio
+                        selected={this.state.optionA}
+                        onPress={() => this.toggleOptionA()}
+                      />
+                    </Right>
+                  </CardItem>
+                  <CardItem
+                    selected={this.state.optionB}
+                    onPress={() => this.toggleOptionB()}>
+                    <Left>
+                      <Text>{item.optionB}</Text>
+                    </Left>
+                    <Right>
+                      <Radio
+                        selected={this.state.optionB}
+                        onPress={() => this.toggleOptionB()}
+                      />
+                    </Right>
+                  </CardItem>
+                  <CardItem
+                    selected={this.state.optionC}
+                    onPress={() => this.toggleOptionC()}>
+                    <Left>
+                      <Text>{item.optionC}</Text>
+                    </Left>
+                    <Right>
+                      <Radio
+                        selected={this.state.optionC}
+                        onPress={() => this.toggleOptionC()}
+                      />
+                    </Right>
+                  </CardItem>
+                  <CardItem
+                    selected={this.state.optionD}
+                    onPress={() => this.toggleOptionD()}>
+                    <Left>
+                      <Text>{item.optionD}</Text>
+                    </Left>
+                    <Right>
+                      <Radio
+                        selected={this.state.optionD}
+                        onPress={() => this.toggleOptionD()}
+                      />
+                    </Right>
+                  </CardItem>
+                </Card>
+              )}
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              flex: 1,
+              position: 'absolute',
+              bottom: 50,
+              left: 0,
+              right: 0,
+              justifyContent: 'space-between',
+              padding: 15,
+            }}>
+            <Button
+              style={{backgroundColor: 'red'}}
+              iconLeft
+              onPress={() => this._deckSwiper._root.swipeLeft()}>
+              <Icon name="arrow-back-sharp" />
+              <Text>Swipe Left</Text>
             </Button>
-          </FooterTab>
-        </Footer> */}
-          <Overlay
-            isVisible={this.state.isVisible}
-            overlayStyle={styles.loader}>
-            <ActivityIndicator size="large" color="#F93106" />
-          </Overlay>
+            <Button
+              style={{backgroundColor: 'red'}}
+              iconRight
+              onPress={() => this._deckSwiper._root.swipeRight()}>
+              <Text>Swipe Right</Text>
+              <Icon name="arrow-back-circle-sharp" />
+            </Button>
+          </View>
         </Container>
       );
     }

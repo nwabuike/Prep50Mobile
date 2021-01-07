@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, StatusBar} from 'react-native';
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, Text, ListItem, Footer } from 'native-base';
+import { Container, Header, Title, Content, Button, Left,FooterTab, Right, Body, Icon, Text,Card,Thumbnail, ListItem, Footer, CardItem } from 'native-base';
 import AnimatedLoader from "react-native-animated-loader";
 // import {  } from "../state/actions";
 // import store from "../state/store";
@@ -21,13 +21,26 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F93106',
     },
     footer: {
-        backgroundColor: '#000000',
+        backgroundColor: 'red',
     },
     lottie: {
         width: 100,
         height: 100
-    }
+    },
+    container: {
+        backgroundColor: "#FFF",
+        justifyContent:'center',
+        alignContent:'center'
+        
+      },
+      mb15: {
+        marginTop: 50,
+        backgroundColor:'red',
+        padding:20,
+        marginLeft:80
+      },
 });
+const logo = require("./img/icon.jpg");
  
 class Dash extends React.Component {
 	constructor(inProps) {
@@ -35,39 +48,33 @@ class Dash extends React.Component {
         super(inProps);
         
 		this.state = {
-            subj: [],
+            user: [],
 			loader: true
         };	
         StatusBar.setBarStyle('dark-content');
         StatusBar.setBackgroundColor('#F93106');
     } /* End constructor. */
 
-    toSubjDash(e, id, subjName){
-        e.preventDefault();
-
-        this.props.navigation.navigate('SubjDash', {id : id, subjName: subjName });
+    toSubjDash(){
+        this.props.navigation.navigate('SubjDash');
     }
-
-    goToUserProfile(){
-        // e.preventDefault();
-        this.props.navigation.navigate('UserDash');
-    }
-    toSignOut(){
-        // e.preventDefault();
-        this.props.navigation.navigate('SignOut');
-    }
-
+    toUserProfile(){
+      this.props.navigation.navigate('UserDash');
+  }
+  toHome(){
+    this.props.navigation.navigate('Dash');
+}
     componentDidMount() {
-		db.getSubj().then((res) => {
-            this.setState({ subj: res });          
+		db.getUser().then((res) => {
+            this.setState({ user: res });          
         }).catch((err) => {
             console.log(err);
         });
 	}
 
     render() {
-        const { subj, loader } = this.state;
-        if(subj.length < 1){
+        const { user, loader } = this.state;
+        if(user.length < 1){
             return (
                 <AnimatedLoader
                     visible={loader}
@@ -79,41 +86,88 @@ class Dash extends React.Component {
             )
         } else {
             return (
-                <Container>
-                    <Header noLeft style={styles.header}>
-                        <Left/>
-                        <Body>
-                            <Title>PREP50</Title>
-                        </Body>
-                        <Right>
-                            <Button transparent onPress={() => this.goToUserProfile()}>
-                                <Icon name='person' />
-                            </Button>
-                        </Right>
-                    </Header>
-                    <Content style={{marginTop: 15}}>
-                        { 
-                            subj.map(sb => 
-                                <ListItem icon key={sb.id}>
-                                    <Left>
-                                    <Button style={{ backgroundColor: "red" }}>
-                                            <Icon active name="book" style={{ color: "white",backgroundColor: "red"  }} />
-                                        </Button>
-                                    </Left>
-                                    <Body>
-                                        <Text>{sb.subjName}</Text>
-                                    </Body>
-                                    <Right>
-                                        <Button transparent onPress={(e) => this.toSubjDash(e, sb.id, sb.subjName)}>
-                                            <Icon active name="arrow-forward" />
-                                        </Button>
-                                    </Right>
-                                </ListItem>
-                            )}
-                             <Text>Signed in!</Text>
-      <Button title="Sign out" onPress={(e) =>this.toSignOut()} />
+                <Container style={styles.container}>
+                    <Header style={styles.header}>
+          <Left>
+            
+          </Left>
+          <Body>
+            <Title>DashBoard</Title>
+          </Body>
+          <Right>
+            
+            <Button transparent>
+              <Icon name="heart-sharp" />
+            </Button>
+            <Button transparent onPress={() => this.toUserProfile()}>
+              <Icon name="people-sharp" />
+            </Button>
+          </Right>
+        </Header>
+                    <Content style={{marginTop: 15}} padder>
+                       <Card>
+                       <CardItem>
+              <Left>
+                <Thumbnail source={logo} />
+                <Body>
+                  <Text>Welcome {user[0]['firstname']} {user[0]['lastname']}</Text>
+                </Body>
+              </Left>
+            </CardItem>
+            </Card>
+            <Card>
+            <CardItem>
+              <Body>
+                <Text>
+                  NativeBase is a free and open source framework that enable
+                  developers to build high-quality mobile apps using React
+                  Native iOS and Android apps with a fusion of ES6.
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>
+                  NativeBase builds a layer on top of React Native that provides
+                  you with basic set of components for mobile application
+                  development.
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>
+                  Get on the mobile fast track with NativeBase, the
+                  fastest-growing platform and tool set for iOS and Android
+                  development.
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem footer>
+              <Text>GeekyAnts</Text>
+            </CardItem>
+                       </Card>
+                       <Button rounded success style={styles.mb15} onPress={() => this.toSubjDash()}>
+            <Text>Start Learning</Text>
+          </Button >
                     </Content>
-                    <Footer style={styles.footer}></Footer>
+                    <Footer style={styles.container}>
+          <FooterTab style={styles.footer}>
+            <Button vertical onPress={() => this.toHome()}>
+              <Icon style={{color:"white"}}  name="home-sharp" />
+              
+              <Text style={{color:"white"}}>Home</Text>
+            </Button>
+            <Button vertical onPress={() => this.toUserProfile()}>
+              <Icon style={{color:"white"}}  name="people-sharp" />
+              <Text style={{color:"white"}}>Profile</Text>
+            </Button>
+            <Button vertical onPress={() => this.toSubjDash()}>
+              <Icon style={{color:"white"}} name="book-sharp" />
+              <Text style={{color:"white"}}>Subject</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
                 </Container>
             )
         }

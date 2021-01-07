@@ -15,19 +15,6 @@ import {
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import * as Progress from 'react-native-progress';
 
-import {
-  ProgressLabel,
-  ProgressContainer,
-  QuestionContainer,
-  AnswersContainer,
-  CheckContainer,
-  Question,
-  CheckButtonText,
-  CheckStatusText,
-} from '../styled';
-import Countdown from '../countdown';
-import Answer from '../Answer';
-
 export default class QuestionScreen extends React.Component {
   state = {
     isCheckMode: false,

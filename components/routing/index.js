@@ -9,7 +9,7 @@ import SignUp from '../gateway/SignUp';
 import SignIn from '../gateway/SignIn';
 // import logOut from '../gateway/logOut';
 import Dash from '../Dash';
-import Subscription from '../Subscription';
+// import Subscription from '../Subscription';
 import UserDash from '../UserDash';
 // import Loading from './components/Loading';
 // import SplashScreen from '../Apploading';
@@ -19,7 +19,9 @@ import TopicDash from '../topicDash';
 import ObjectiveDash from '../objDash';
 import QuestionDash from '../quesDash';
 import SignOut from '../gateway/logOut';
-import IndexQues from '../Questions';
+import FooterSect from '../Footer';
+import HeaderSect from '../Header';
+import PaymentGateWay from '../PaymentGateWay'
 // import Navigator from './components/HomeStack';
 
 const AuthStack = createStackNavigator(
@@ -37,14 +39,15 @@ const AuthStack = createStackNavigator(
 
 const AppStack = createStackNavigator(
   {
-    Subscription,
+    // Subscription,
+    PaymentGateWay,
     UserDash,
     SubjDash,
     TopicDash,
     ObjectiveDash,
     QuestionDash,
+    HeaderSect,
     Dash,
-    IndexQues
   },
   {
     headerMode: 'none',

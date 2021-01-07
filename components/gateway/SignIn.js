@@ -109,7 +109,7 @@ class SignIn extends Component {
 			this.submitErr('Login Error', 'Your Phone number are required!');
         } else {
 			console.log( this.state.phone.trim());
-            axios.post('https://f4e7570aa9fa.ngrok.io/api/login', { phone: this.state.phone })
+            axios.post('https://e1e0a99fc3f9.ngrok.io/api/login', { phone: this.state.phone })
             .then(res => {
 				console.log(res);
                 if(res.data.message == undefined){
@@ -188,7 +188,7 @@ class SignIn extends Component {
 							  // console.log(subjId);
 							  axios
 								.get(
-								  'https://f4e7570aa9fa.ngrok.io/api/getTopicsInSubjects/' +
+								  'https://e1e0a99fc3f9.ngrok.io/api/getTopicsInSubjects/' +
 									element.pivot.subject_id, +'?limit=3',
 								  {},
 								)
@@ -218,7 +218,7 @@ class SignIn extends Component {
 									// objectives
 									axios
 									  .get(
-										'https://f4e7570aa9fa.ngrok.io/api/objectiveAllinTopic/' +
+										'https://e1e0a99fc3f9.ngrok.io/api/objectiveAllinTopic/' +
 										  addTopics.id, +'?limit=3',
 										{},
 									  )
@@ -252,7 +252,7 @@ class SignIn extends Component {
 	  
 											axios
 											  .get(
-												'https://f4e7570aa9fa.ngrok.io/api/getQuestionsInObjective/' +
+												'https://e1e0a99fc3f9.ngrok.io/api/getQuestionsInObjective/' +
 												  addObjective.id, +'?limit=3',
 												{},
 											  )
@@ -300,6 +300,11 @@ class SignIn extends Component {
 									  }); // Objectives Ends
 								  }); //topics ends
 								}) // Ends Sub Subjects
+								.then(()=>{
+									this.setState({ isVisible: false });
+								this.props.navigation.navigate('Dash');
+								alert(res.data.message);
+								})
 								.catch((error) => {
 								  console.log(error);
 								});
@@ -317,6 +322,7 @@ class SignIn extends Component {
 					});
                 } else {
 					this.setState({ isVisible: false });
+					this.props.navigation.navigate('Dash');
 					alert(res.data.message);                    
                 }
             }).catch((error) => {

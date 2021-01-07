@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
-import { exists } from 'react-native-fs';
 import SQLite from 'react-native-sqlite-storage';
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
@@ -286,13 +285,16 @@ export default class Database {
                   for (let i = 0; i < len; i++) {
                     let row = results.rows.item(i);
                     
-                    const {  id, firstname, lastname, othername, accessToken } = row;
+                    const {  id, firstname, lastname,email, othername, accessToken,phone } = row;
                     userSubj.push({
                       id,
                       firstname,
                       lastname,
                       othername,
-                      accessToken
+                      accessToken,
+                      phone,
+                      email
+
                     });
                   }
                   

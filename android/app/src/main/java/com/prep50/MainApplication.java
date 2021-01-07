@@ -8,20 +8,14 @@ import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
-import com.prep50.generated.BasePackageList;
+// import com.prep50.generated.BasePackageList;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Arrays;
-import com.airbnb.android.react.lottie.LottiePackage;
- 
-import org.unimodules.adapters.react.ModuleRegistryAdapter;
-import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-import org.unimodules.core.interfaces.SingletonModule;
 
 public class MainApplication extends Application implements ReactApplication {
-  private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(new BasePackageList().getPackageList(), null);
+  
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
@@ -37,15 +31,11 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
            // Add unimodules
-
-           packages.add(new LottiePackage());
+          //   new RNFSPackage();
+          //  packages.add(new LottiePackage());
           //  packages.add(new SQLitePluginPackage());
            
-           List<ReactPackage> unimodules = Arrays.<ReactPackage>asList(
-            //  new SQLitePluginPackage(),
-            new ModuleRegistryAdapter(mModuleRegistryProvider)
-          );
-          packages.addAll(unimodules);
+          
           return packages;
           
         }

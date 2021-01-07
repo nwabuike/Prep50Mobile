@@ -1,6 +1,6 @@
 import React, { Component, useReducer } from 'react';
 import {StyleSheet, StatusBar, FlatList, TouchableOpacity} from 'react-native';
-import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
+import { Container, Header, Content, Button, ListItem,FooterTab,Footer, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from "react-native-animated-loader";
 const db = new Database();
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F93106',
     },
     footer: {
-        backgroundColor: '#000000',
+        backgroundColor: 'red',
     },
     lottie: {
         width: 100,
@@ -32,6 +32,15 @@ export default class topicDash extends Component {
         StatusBar.setBarStyle('dark-content');
         StatusBar.setBackgroundColor('#F93106');
     } /* End constructor. */
+    toSubjDash(){
+        this.props.navigation.navigate('SubjDash');
+    }
+    toUserProfile(){
+      this.props.navigation.navigate('UserDash');
+    }
+    toHome(){
+    this.props.navigation.navigate('Dash');
+    }
 
     componentDidMount() {
         // const id = route.params.id;
@@ -63,32 +72,51 @@ export default class topicDash extends Component {
         } else {
             return (
                 <Container>
-                    <Header noLeft style={styles.header}>
-                        <Left/>
+                    <Header style={styles.header}>
+                    <Left>
+              <Button
+                transparent
+                onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back-sharp" />
+              </Button>
+            </Left>
                         <Body>
-                            <Title>PREP50</Title>
+                            <Title>Topic</Title>
                         </Body>
-                        <Right/>
                     </Header>
                     <Content>
-                        <Separator bordered>
-                            <Text>BIO</Text>
-                        </Separator>
-                        <ListItem avatar>
-                            <Body>
                             <FlatList data={topic}
           renderItem={({item}) => (
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ObjectiveDash', item)}>
+            <ListItem>
+            <Left>
+              <Text><TouchableOpacity onPress={() => this.props.navigation.navigate('ObjectiveDash', item)}>
                     <Text style={styles.container}>{item.topic}</Text>
-                       </TouchableOpacity>
+                       </TouchableOpacity></Text>
+            </Left>
+            <Right>
+            <Icon style={{color:"red"}} name="arrow-forward-circle-outline" />
+            </Right>
+          </ListItem>
+                        
           )}
                        />
-                            </Body>
-                            <Right>
-                                {/* <Text note>{user[0]['dateReg']}</Text> */}
-                            </Right>
-                        </ListItem>
                     </Content>
+                    <Footer style={styles.container}>
+          <FooterTab style={styles.footer}>
+            <Button vertical onPress={() => this.toHome()}>
+              <Icon style={{color:"white"}}  name="home-sharp" />
+              <Text style={{color:"white"}}>Home</Text>
+            </Button>
+            <Button vertical onPress={() => this.toUserProfile()}>
+              <Icon style={{color:"white"}} name="people-sharp" />
+              <Text style={{color:"white"}}>Profile</Text>
+            </Button>
+            <Button vertical onPress={() => this.toSubjDash()}>
+              <Icon style={{color:"white"}}  name="book-sharp" />
+              <Text style={{color:"white"}}>Subject</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
                 </Container>
             );
         }
