@@ -1,6 +1,6 @@
 import React, { Component, useReducer } from 'react';
 import {StyleSheet, StatusBar, FlatList, TouchableOpacity} from 'react-native';
-import { Container, Header, Content, Button, ListItem,FooterTab,Footer, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
+import { Container, Header, Content,Card, Button, ListItem,FooterTab,Footer, Text, Icon, Left, Body, Right, Thumbnail, Title, Separator } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from "react-native-animated-loader";
 const db = new Database();
@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
     lottie: {
         width: 100,
         height: 100
+    },
+    mb: {
+      marginBottom: 15,
+      marginTop:15
     },
    
 });
@@ -84,7 +88,8 @@ export default class topicDash extends Component {
                             <Title>Topic</Title>
                         </Body>
                     </Header>
-                    <Content>
+                    <Content padder>
+                      <Card style={styles.mb}>
                             <FlatList data={topic}
           renderItem={({item}) => (
             <ListItem>
@@ -93,13 +98,11 @@ export default class topicDash extends Component {
                     <Text style={styles.container}>{item.topic}</Text>
                        </TouchableOpacity></Text>
             </Left>
-            <Right>
-            <Icon style={{color:"red"}} name="arrow-forward-circle-outline" />
-            </Right>
           </ListItem>
                         
           )}
                        />
+                       </Card>
                     </Content>
                     <Footer style={styles.container}>
           <FooterTab style={styles.footer}>

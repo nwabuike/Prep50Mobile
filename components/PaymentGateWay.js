@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import {
   Content,
@@ -29,6 +31,7 @@ import PaystackWebView from 'react-native-paystack-webview';
 import AnimatedLoader from 'react-native-animated-loader';
 import Database from '../database';
 import Orientation from 'react-native-orientation';
+import axios from 'axios';
 const db = new Database();
 let {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -56,6 +59,11 @@ export default class PaymentGateWay extends Component {
     this.state = {
       user: [],
       loader: true,
+      user_id:'',
+      amount:1500,
+      isVisible: false,
+      trxref:'',
+      status:''
     };
     StatusBar.setBarStyle('dark-content');
     StatusBar.setBackgroundColor('#F93106');
@@ -85,7 +93,7 @@ export default class PaymentGateWay extends Component {
             //update all activities.active to Y in app DB
             //send User to dash
           } else {
-            this.setState({isVisible: false});
+            // this.setState({isVisible: false});
             alert(res.data.message);
           }
         })
@@ -107,7 +115,10 @@ export default class PaymentGateWay extends Component {
   render() {
     // function Pay(){
     //   const childRef = useRef();
+    
     const {user, loader} = this.state;
+    
+    
     if (user.length < 1) {
       return (
         <AnimatedLoader
@@ -136,8 +147,11 @@ export default class PaymentGateWay extends Component {
                     PREP50's full features. The security of your card details is
                     assured by our partnership with PAYSTACK.
                   </Text>
+                  
                 </CardItem>
+                
                 <CardItem>
+                  
                   <PaystackWebView
                     buttonText="Pay Now"
                     textStyles={{
@@ -156,21 +170,76 @@ export default class PaymentGateWay extends Component {
                     }}
                     showPayButton={true}
                     paystackKey="pk_test_758495a9d79b4f78855cca77be03287bd635b3e6"
-                    amount={15000}
+                    amount={1500}
+                    refNumber={Math.floor((Math.random() * 10000000000))}
                     billingEmail={user[0]['email']}
                     billingMobile={user[0]['phone']}
                     billingName={user[0]['lastname']}
-                    ActivityIndicatorColor="green"
+                    ActivityIndicatorColor="red"
                     SafeAreaViewContainer={{marginTop: 5}}
                     SafeAreaViewContainerModal={{marginTop: 5}}
                     handleWebViewMessage={(e) => {
                       // handle the message
+                      console.log(e);
+                     
+                      
                     }}
                     onCancel={(e) => {
                       console.log(e, 'something went wrong');
-                    }}
+                     
+                      
+                  }}
                     onSuccess={(e) => {
-                      console.log(e, 'Successful');
+                      
+                      console.log(e, 'successfull paid');
+                      if(e.status== "success"){
+                        let user_id = user[0]['id'];
+                        // const user_id=user.id;
+                        console.log(
+                          user_id,
+                          this.state.amount,
+                          e.data.transactionRef.trxref,
+                          e.data.transactionRef.status
+                        );
+                        this.setState({isVisible: true});
+                      axios.post('https://c18bcd439245.ngrok.io/api/payMe', {
+                        // let amount =1500;
+                        user_id:user_id,
+                        amount:this.state.amount,
+                        transaction_reference:e.data.transactionRef.trxref,
+                        status:e.data.transactionRef.status,
+                      }).then((res)=>{
+                        if(res.status ==200){
+                          console.log(res.data.pay.id,
+                            res.data.pay.amount
+                            );
+                          
+                          db.addPayment(res.data.pay.id, res.data.pay.created_at, res.data.pay.transaction_reference)
+                      .then((res6) => {
+                        if (res6.rowsAffected == 1) {
+                          console.log('inserted an Payment');
+                          
+                        } 
+                        
+                      }).then(()=>{
+                        this.setState({ isVisible: false });
+                        this.props.navigation.navigate('Dash');
+                        alert('You have successfully Paid for prep50');
+                      })
+                      .catch((err) => {
+                        this.setState({ isVisible: false });
+                        console.log(err, 'payment not inserted');
+                      });
+                        }
+
+                      }).catch(()=>{
+
+                      });
+                      }else{
+                           console.log(' not inserted');
+                      }
+                      
+                      
                     }}
                     autoStart={false}
                   />
@@ -203,6 +272,9 @@ export default class PaymentGateWay extends Component {
               </Card>
             </Tab>
           </Tabs>
+          <Overlay isVisible={this.state.isVisible} overlayStyle={styles.loader}>
+          <ActivityIndicator size="large" color="#F93106" />
+        </Overlay>
         </Container>
       );
     }

@@ -69,6 +69,19 @@ export default class Database {
                                          });
                                  })
                                  .then(() => {
+                                  db.transaction(tx => {
+                                      tx.executeSql(
+                                          'CREATE TABLE IF NOT EXISTS payments (id int(3) PRIMARY KEY, transReff varchar(100), created_at varchar(100), amount varchar(11))'
+                                      );
+                                  })
+                                      .then(() => {
+                                          console.log('Activity table created Successfully');
+                                      })
+                                      .catch(error => {
+                                          console.log(error)
+                                      });
+                              })
+                                 .then(() => {
                                    db.transaction(tx => {
                                        tx.executeSql(
                                            'CREATE TABLE IF NOT EXISTS topics (id int(11) PRIMARY KEY, topic varchar(100), subject_id int(11))'
@@ -151,7 +164,7 @@ export default class Database {
       return new Promise((resolve) => {
         this.initDB().then((db) => {
         db.transaction((tx) => {
-          tx.executeSql('INSERT INTO user(id, firstname, othername, lastname, phone, dateReg, gender, email, totalCoinsAccrued, totalCurrentCoin, accessToken) VALUES (1,"'+user.firstname+'","'+user.othername+'","'+user.lastname+'","'+user.phone+'","'+user.dateReg+'","'+user.gender+'","'+user.email+'","'+user.totalCoinsAccrued+'","'+user.totalCurrentCoin+'","'+user.accessToken+'")', []).then(([tx, results]) => {
+          tx.executeSql('INSERT INTO user(id, firstname, othername, lastname, phone, dateReg, gender, email, totalCoinsAccrued, totalCurrentCoin, accessToken) VALUES ("'+user.id+'","'+user.firstname+'","'+user.othername+'","'+user.lastname+'","'+user.phone+'","'+user.dateReg+'","'+user.gender+'","'+user.email+'","'+user.totalCoinsAccrued+'","'+user.totalCurrentCoin+'","'+user.accessToken+'")', []).then(([tx, results]) => {
           resolve(results);
           });
         })
@@ -188,6 +201,28 @@ export default class Database {
           });
         });  
         }
+
+          //User payment
+          addPayment(id,transaction_reference, created_at) {
+            return new Promise((resolve) => {
+              this.initDB().then((db) => {
+              db.transaction((tx) => {
+                tx.executeSql('INSERT INTO payments(id, transReff, created_at) VALUES ("'+id+'", "'+transaction_reference+'", "'+created_at+'")', []).then(([tx, results]) => {
+                resolve(results);
+                });
+              })
+              .then(()=>{
+                console.log('Payment record Created');
+              }).then((result) => {
+                this.closeDatabase(db);
+              }).catch((err) => {
+                console.log(err);
+              });
+              }).catch((err) => {
+              console.log(err);
+              });
+            });  
+            }
 
           //User subject
           addUserSubj(subject_id, subj) {
@@ -299,6 +334,45 @@ export default class Database {
                   }
                   
                   resolve(userSubj);
+                });
+              }).then((result) => {
+                this.closeDatabase(db);
+              }).catch((err) => {
+                console.log(err);
+              });
+            }).catch((err) => {
+              console.log(err);
+            });
+          });
+        }
+
+        getPayment(){
+          return new Promise((resolve) => {
+            const paymentsDash = [];
+        
+            this.initDB().then((db) => {
+              db.transaction((tx) => {
+                tx.executeSql("SELECT * FROM payments", []).then(([tx,results]) => {
+
+                  
+                  var len = results.rows.length;
+                  if(len == 0){
+                    console.log(results, 'No Payments record found');
+                  }else{
+                    console.log(results, 'Payments record found');
+                  }
+                  
+                  for (let i = 0; i < len; i++) {
+                    let row = results.rows.item(i);
+                    
+                    const {  id, created_at} = row;
+                    paymentsDash.push({
+                      id,
+                      created_at
+                    });
+                  }
+                  
+                  resolve(paymentsDash);
                 });
               }).then((result) => {
                 this.closeDatabase(db);
@@ -465,6 +539,7 @@ export default class Database {
                       optionC,
                       optionD,answer,
                       passage,
+                      answer,
                       quesYear,
                       quesYearNum
                     });

@@ -204,7 +204,7 @@ class SignUp extends Component {
       );
       // const uniqueId = DeviceInfo.getUniqueID();
       axios
-        .post('https://e1e0a99fc3f9.ngrok.io/api/register', {
+        .post('https://c18bcd439245.ngrok.io/api/register', {
           firstname: this.state.firstname.trim(),
           othername: this.state.othername.trim(),
           lastname: this.state.lastname.trim(),
@@ -220,6 +220,7 @@ class SignUp extends Component {
         })
         .then((res) => {
           console.log(res);
+          console.log(res.data.error);
           if (res.status == 200) {
             // axios.post('')
             let uData = [];
@@ -236,7 +237,6 @@ class SignUp extends Component {
             // uData['img'] = res.data.user.img;
             uData['tca'] = res.data.user.totalCoinsAccrued;
             uData['tcc'] = res.data.user.totalCurrentCoin;
-            uData['oName'] = res.data.user.othername;
             uData['id'] = res.data.user.id;
             uData['accessToken'] = res.data.access_token;
 
@@ -264,6 +264,7 @@ class SignUp extends Component {
                         }
                       })
                       .catch((err) => {
+                        this.setState({ isVisible: false });
                         console.log(err);
                       });
                   }
@@ -294,7 +295,7 @@ class SignUp extends Component {
                         // console.log(subjId);
                         axios
                           .get(
-                            'https://e1e0a99fc3f9.ngrok.io/api/getTopicsInSubjects/' +
+                            'https://c18bcd439245.ngrok.io/api/getTopicsInSubjects/' +
                               element.pivot.subject_id,
                             {},
                           )
@@ -317,6 +318,7 @@ class SignUp extends Component {
                                   }
                                 })
                                 .catch((err) => {
+                                  this.setState({ isVisible: false });
                                   console.log(err);
                                 });
                               // wait(1000);
@@ -324,7 +326,7 @@ class SignUp extends Component {
                               // objectives
                               axios
                                 .get(
-                                  'https://e1e0a99fc3f9.ngrok.io/api/objectiveAllinTopic/' +
+                                  'https://c18bcd439245.ngrok.io/api/objectiveAllinTopic/' +
                                     addTopics.id,
                                   {},
                                 )
@@ -350,13 +352,14 @@ class SignUp extends Component {
                                           }
                                         })
                                         .catch((err) => {
+                                          this.setState({ isVisible: false });
                                           console.log(err);
                                         });
                                       // wait(1000);
 
                                       axios
                                         .get(
-                                          'https://e1e0a99fc3f9.ngrok.io/api/getQuestionsInObjective/' +
+                                          'https://c18bcd439245.ngrok.io/api/getQuestionsInObjective/' +
                                             addObjective.id,
                                           {},
                                         )
@@ -389,26 +392,31 @@ class SignUp extends Component {
                                                 }
                                               })
                                               .catch((err) => {
+                                                this.setState({ isVisible: false });
                                                 console.log(err);
                                               });
                                           });
                                         }) // Ends Questions
                                         .catch((error) => {
+                                          this.setState({ isVisible: false });
                                           console.log(error);
                                         });
                                     })
                                     .catch((error) => {
+                                      this.setState({ isVisible: false });
                                       console.log(error);
                                     });
                                 }); // Objectives Ends
                             }); //topics ends
                           }) // Ends Sub Subjects
                           .catch((error) => {
+                            this.setState({ isVisible: false });
                             console.log(error, 'Stopped at Subject');
                           });
                         // }
                       })
                       .catch((err) => {
+                        this.setState({ isVisible: false });
                         console.log(err);
                       });
                   }); // end subject section
@@ -416,21 +424,23 @@ class SignUp extends Component {
                 } // Main subjects Ends
               }).then(()=>{
                 this.setState({ isVisible: false });
-            this.props.navigation.navigate('Dash');
-            alert(res.data.message);
+            this.props.navigation.navigate('UserDash');
+            console.log(res.data.message);
+            alert('You have successfully Signed Up with prep50');
               })
               .catch((err) => {
+                this.setState({ isVisible: false });
                 console.log(err);
               });
               
           } else {
             this.setState({ isVisible: false });
-            this.props.navigation.navigate('Dash');
             alert(res.data.message);                    
                   }
         })
         .catch((error) => {
-          alert(error,'Something Went wrong, Opps try Again later');
+          this.setState({ isVisible: false });
+          alert('Email Or phone number has been taken. Try a  new one!!');
           console.log(error);
         });
     }

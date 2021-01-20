@@ -16,6 +16,7 @@ import {
   Separator,
   Footer,
   FooterTab,
+  Card,
 } from 'native-base';
 import Database from '../database';
 import AnimatedLoader from 'react-native-animated-loader';
@@ -30,6 +31,10 @@ const styles = StyleSheet.create({
   lottie: {
     width: 100,
     height: 100,
+  },
+  mb: {
+    marginBottom: 15,
+    marginTop:15
   },
 });
 
@@ -95,9 +100,8 @@ this.props.navigation.navigate('Dash');
               <Title>Objective</Title>
             </Body>
           </Header>
-          <Content>
-            <ListItem avatar>
-              <Body>
+          <Content padder>
+            <Card style={styles.mb}>
                 <FlatList
                   data={obj}
                   renderItem={({item}) => (
@@ -115,15 +119,10 @@ this.props.navigation.navigate('Dash');
                           </TouchableOpacity>
                         </Text>
                       </Left>
-                      <Right>
-                        <Icon style={{color:"red"}} name="arrow-forward-circle-outline" />
-                      </Right>
                     </ListItem>
                   )}
                 />
-              </Body>
-              <Right>{/* <Text note>{user[0]['dateReg']}</Text> */}</Right>
-            </ListItem>
+            </Card>
           </Content>
           <Footer style={styles.container}>
           <FooterTab style={styles.footer}>

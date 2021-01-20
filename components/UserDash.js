@@ -2,7 +2,7 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 import React, {Component, useReducer} from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, ActivityIndicator} from 'react-native';
 import {
   Container,
   Header,
@@ -43,13 +43,11 @@ export default class ListIconExample extends Component {
     this.state = {
       user: [],
       loader: true,
+      payment:[]
     };
     StatusBar.setBarStyle('dark-content');
     StatusBar.setBackgroundColor('#F93106');
   } /* End constructor. */
-  toSubjDash() {
-    this.props.navigation.navigate('SubjDash');
-  }
   toUserProfile() {
     this.props.navigation.navigate('UserDash');
   }
@@ -64,15 +62,39 @@ export default class ListIconExample extends Component {
       .catch((err) => {
         console.log(err);
       });
+    
   }
- 
+  toSubjDash() {
+    db.getPayment()
+      .then((data) => {
+        let len = data.length;
+
+        if (len < 1) {
+          this.goPay();
+        } else {
+          this.goSubj();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  goPay = () => {
+    this.props.navigation.navigate('UserDash');
+  }
+
+  goSubj = () => {
+    this.props.navigation.navigate('SubjDash');
+  }
+
 
   toSubscription() {
     this.props.navigation.navigate('PaymentGateWay');
   }
 
   render() {
-    const {user, loader} = this.state;
+    const {user, loader, payment} = this.state;
 
     if (user.length < 1) {
       return (
@@ -104,49 +126,55 @@ export default class ListIconExample extends Component {
               </Left>
               <Body>
                 <Text>
-                  {user[0]['firstname']} {user[0]['othername']}{' '}
-                  {user[0]['lastname']}
+                  {user[0]['firstname']} {user[0]['othername']} {user[0]['lastname']}
+                  
                 </Text>
-                {/* <Text note>{user[0]['univ']}, {user[0]['dept']}</Text> */}
               </Body>
-              <Right>{/* <Text note>{user[0]['dateReg']}</Text> */}</Right>
             </ListItem>
             <Separator bordered>
               <Text>ACCOUNT</Text>
             </Separator>
             <ListItem icon>
               <Left>
-                <Button style={{backgroundColor: '#727C6E'}}>
-                  <Icon active name="phone-landscape-sharp" />
+                <Button style={{backgroundColor: 'red'}}>
+                  <Icon active name="person-add-sharp" />
                 </Button>
               </Left>
               <Body>
-                <Text>Phone Number:- {user[0]['phone']}</Text>
+                <Text>Phone Number :- {user[0]['phone']}</Text>
               </Body>
               <Right />
             </ListItem>
             <ListItem icon>
               <Left>
-                <Button style={{backgroundColor: '#727C6E'}}>
-                  <Icon active name="phone-landscape-sharp" />
+                <Button style={{backgroundColor: 'red'}}>
+                  <Icon active name="person-add-sharp" />
                 </Button>
               </Left>
               <Body>
-                <Text>Email:- {user[0]['email']}</Text>
+                <Text>Email :- {user[0]['email']}</Text>
+                
               </Body>
               <Right />
             </ListItem>
             <ListItem icon>
               <Left>
-                <Button style={{backgroundColor: '#007AFF'}}>
-                  <Icon active name="cash-sharp" />
+                <Button style={{backgroundColor: 'red'}}>
+                  <Icon active name="book-sharp" />
                 </Button>
               </Left>
               <Body>
-                <Text>Demo Account</Text>
+                {
+                  payment === 1 ? (
+                    <Text>{payment[0]['id']} Active Account</Text>
+                  ):( <Text>{payment.id}Demo Account</Text>
+                    )
+                }
               </Body>
               <Right>
-                <Button onPress={() => this.toSubscription()} style={{backgroundColor:'red'}}>
+                <Button
+                  onPress={() => this.toSubscription()}
+                  style={{backgroundColor: 'red'}}>
                   <Text>Pay</Text>
                   <Icon active name="arrow-forward-outline" />
                 </Button>
@@ -165,7 +193,7 @@ export default class ListIconExample extends Component {
                 <Text>Update</Text>
               </Body>
               <Right>
-                <Button style={{backgroundColor:'red'}}>
+                <Button style={{backgroundColor: 'red'}}>
                   <Text>Check</Text>
                   <Icon active name="arrow-forward" />
                 </Button>
@@ -176,16 +204,16 @@ export default class ListIconExample extends Component {
           <Footer style={styles.container}>
             <FooterTab style={styles.footer}>
               <Button vertical onPress={() => this.toHome()}>
-                <Icon name="home" />
-                <Text>Home</Text>
+                <Icon style={{color: 'white'}} name="home-sharp" />
+                <Text style={{color: 'white'}}>Home</Text>
               </Button>
               <Button vertical onPress={() => this.toUserProfile()}>
-                <Icon name="apps" />
-                <Text>Profile</Text>
+                <Icon style={{color: 'white'}} name="people-sharp" />
+                <Text style={{color: 'white'}}>Profile</Text>
               </Button>
               <Button vertical onPress={() => this.toSubjDash()}>
-                <Icon name="book" />
-                <Text>Subject</Text>
+                <Icon style={{color: 'white'}} name="book-sharp" />
+                <Text style={{color: 'white'}}>Subject</Text>
               </Button>
             </FooterTab>
           </Footer>

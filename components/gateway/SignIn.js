@@ -109,7 +109,7 @@ class SignIn extends Component {
 			this.submitErr('Login Error', 'Your Phone number are required!');
         } else {
 			console.log( this.state.phone.trim());
-            axios.post('https://e1e0a99fc3f9.ngrok.io/api/login', { phone: this.state.phone })
+            axios.post('https://c18bcd439245.ngrok.io/api/login', { phone: this.state.phone })
             .then(res => {
 				console.log(res);
                 if(res.data.message == undefined){
@@ -128,7 +128,6 @@ class SignIn extends Component {
 					// uData['img'] = res.data.user.img;
 					uData['tca'] = res.data.user.totalCoinsAccrued;
 					uData['tcc'] = res.data.user.totalCurrentCoin;
-					uData['oName'] = res.data.user.othername;
 					uData['id'] = res.data.user.id;
 					uData['accessToken'] = res.data.access_token;
 					
@@ -153,18 +152,13 @@ class SignIn extends Component {
 							.then((res6) => {
 							  if (res6.rowsAffected == 1) {
 								console.log('inserted an activity');
-								this.setState({isVisible: false});
-								this.props.navigation.navigate('Dash');
 							  }
 							})
 							.catch((err) => {
+								this.setState({ isVisible: false });
 							  console.log(err);
 							});
 						}
-						let subjDone = false;
-						let topicDone = false;
-						let objDone = false;
-						let quesDone = false;
 	  
 						//   console.log('About to enter subject section');
 						//   console.log(uSubjReg, 'All subject');
@@ -188,7 +182,7 @@ class SignIn extends Component {
 							  // console.log(subjId);
 							  axios
 								.get(
-								  'https://e1e0a99fc3f9.ngrok.io/api/getTopicsInSubjects/' +
+								  'https://c18bcd439245.ngrok.io/api/getTopicsInSubjects/' +
 									element.pivot.subject_id, +'?limit=3',
 								  {},
 								)
@@ -211,6 +205,7 @@ class SignIn extends Component {
 										}
 									  })
 									  .catch((err) => {
+										this.setState({ isVisible: false });
 										console.log(err);
 									  });
 									// wait(1000);
@@ -218,7 +213,7 @@ class SignIn extends Component {
 									// objectives
 									axios
 									  .get(
-										'https://e1e0a99fc3f9.ngrok.io/api/objectiveAllinTopic/' +
+										'https://c18bcd439245.ngrok.io/api/objectiveAllinTopic/' +
 										  addTopics.id, +'?limit=3',
 										{},
 									  )
@@ -246,13 +241,14 @@ class SignIn extends Component {
 												
 											  })
 											  .catch((err) => {
+												this.setState({ isVisible: false });
 												console.log(err);
 											  });
 											// wait(1000);
 	  
 											axios
 											  .get(
-												'https://e1e0a99fc3f9.ngrok.io/api/getQuestionsInObjective/' +
+												'https://c18bcd439245.ngrok.io/api/getQuestionsInObjective/' +
 												  addObjective.id, +'?limit=3',
 												{},
 											  )
@@ -283,34 +279,41 @@ class SignIn extends Component {
 														console.log(
 														  'inserted a question',
 														);
+														this.setState({ isVisible: false });
 													  }
+													  this.setState({ isVisible: false });
 													})
 													.catch((err) => {
+														this.setState({ isVisible: false });
 													  console.log(err);
 													});
 												});
 											  }) // Ends Questions
 											  .catch((error) => {
+												this.setState({ isVisible: false });
 												console.log(error);
 											  });
 										  })
 										  .catch((error) => {
+											this.setState({ isVisible: false });
 											console.log(error);
 										  });
 									  }); // Objectives Ends
 								  }); //topics ends
 								}) // Ends Sub Subjects
 								.then(()=>{
-									this.setState({ isVisible: false });
+									
 								this.props.navigation.navigate('Dash');
-								alert(res.data.message);
+								alert('You have successfully Signed Up with prep50');
 								})
 								.catch((error) => {
+									this.setState({ isVisible: false });
 								  console.log(error);
 								});
 							  // }
 							})
 							.catch((err) => {
+								this.setState({ isVisible: false });
 							  console.log(err);
 							});
 						}); // end subject section
@@ -318,14 +321,15 @@ class SignIn extends Component {
 					  } // Main subjects Ends
 					
 				  }).catch((err) => {
+					this.setState({ isVisible: false });
 						console.log(err);
 					});
                 } else {
 					this.setState({ isVisible: false });
-					this.props.navigation.navigate('Dash');
 					alert(res.data.message);                    
                 }
             }).catch((error) => {
+				this.setState({ isVisible: false });
                 console.log(error)
             });
         }

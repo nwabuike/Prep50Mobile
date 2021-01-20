@@ -151,9 +151,6 @@ this.props.navigation.navigate('Dash');
                     <Text style={styles.container}>{item.subjName}</Text>
                   </TouchableOpacity></Text>
                 </Left>
-                <Right>
-                <Icon style={{color:"red"}} name="arrow-forward-circle-outline" />
-                </Right>
               </ListItem>
                  
                   
