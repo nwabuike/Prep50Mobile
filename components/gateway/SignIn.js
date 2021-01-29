@@ -109,7 +109,7 @@ class SignIn extends Component {
 			this.submitErr('Login Error', 'Your Phone number are required!');
         } else {
 			console.log( this.state.phone.trim());
-            axios.post('https://c18bcd439245.ngrok.io/api/login', { phone: this.state.phone })
+            axios.post('http://prep50mobileapp.com.ngapi/login', { phone: this.state.phone })
             .then(res => {
 				console.log(res);
                 if(res.data.message == undefined){
@@ -182,7 +182,7 @@ class SignIn extends Component {
 							  // console.log(subjId);
 							  axios
 								.get(
-								  'https://c18bcd439245.ngrok.io/api/getTopicsInSubjects/' +
+								  'http://prep50mobileapp.com.ngapi/getTopicsInSubjects/' +
 									element.pivot.subject_id, +'?limit=3',
 								  {},
 								)
@@ -213,7 +213,7 @@ class SignIn extends Component {
 									// objectives
 									axios
 									  .get(
-										'https://c18bcd439245.ngrok.io/api/objectiveAllinTopic/' +
+										'http://prep50mobileapp.com.ngapi/objectiveAllinTopic/' +
 										  addTopics.id, +'?limit=3',
 										{},
 									  )
@@ -248,7 +248,7 @@ class SignIn extends Component {
 	  
 											axios
 											  .get(
-												'https://c18bcd439245.ngrok.io/api/getQuestionsInObjective/' +
+												'http://prep50mobileapp.com.ngapi/getQuestionsInObjective/' +
 												  addObjective.id, +'?limit=3',
 												{},
 											  )

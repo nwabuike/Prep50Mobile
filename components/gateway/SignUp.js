@@ -204,7 +204,7 @@ class SignUp extends Component {
       );
       // const uniqueId = DeviceInfo.getUniqueID();
       axios
-        .post('https://c18bcd439245.ngrok.io/api/register', {
+        .post('http://prep50mobileapp.com.ngapi/register', {
           firstname: this.state.firstname.trim(),
           othername: this.state.othername.trim(),
           lastname: this.state.lastname.trim(),
@@ -295,7 +295,7 @@ class SignUp extends Component {
                         // console.log(subjId);
                         axios
                           .get(
-                            'https://c18bcd439245.ngrok.io/api/getTopicsInSubjects/' +
+                            'http://prep50mobileapp.com.ngapi/getTopicsInSubjects/' +
                               element.pivot.subject_id,
                             {},
                           )
@@ -326,7 +326,7 @@ class SignUp extends Component {
                               // objectives
                               axios
                                 .get(
-                                  'https://c18bcd439245.ngrok.io/api/objectiveAllinTopic/' +
+                                  'http://prep50mobileapp.com.ngapi/objectiveAllinTopic/' +
                                     addTopics.id,
                                   {},
                                 )
@@ -359,7 +359,7 @@ class SignUp extends Component {
 
                                       axios
                                         .get(
-                                          'https://c18bcd439245.ngrok.io/api/getQuestionsInObjective/' +
+                                          'http://prep50mobileapp.com.ngapi/getQuestionsInObjective/' +
                                             addObjective.id,
                                           {},
                                         )

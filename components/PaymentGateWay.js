@@ -202,7 +202,7 @@ export default class PaymentGateWay extends Component {
                           e.data.transactionRef.status
                         );
                         this.setState({isVisible: true});
-                      axios.post('https://c18bcd439245.ngrok.io/api/payMe', {
+                      axios.post('http://prep50mobileapp.com.ngapi/payMe', {
                         // let amount =1500;
                         user_id:user_id,
                         amount:this.state.amount,
